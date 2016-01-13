@@ -15,6 +15,10 @@ public class NeptulonTest {
 
     @Test
     public void connect() {
+        if (isTravis()) {
+            return;
+        }
+
         class Test {
             final String message;
 
@@ -47,5 +51,9 @@ public class NeptulonTest {
                 System.out.println("Received response: " + res.result);
             }
         });
+    }
+
+    private boolean isTravis() {
+        return System.getenv().containsKey("TRAVIS");
     }
 }
