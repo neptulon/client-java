@@ -93,6 +93,8 @@ public class ConnImpl implements Conn, WebSocketListener {
         middleware.add(mw);
     }
 
+    // todo: handleRequest(method, .....) { if isClientConn... else exception } // same goes for go-client
+
     @Override
     public void connect() {
         // enqueue this listener implementation to initiate the WebSocket connection
