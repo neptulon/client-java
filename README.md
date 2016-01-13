@@ -11,3 +11,17 @@ Depends on following libraries:
 
 * OkHttp for WebSockets
 * GSON for JSON serialization.
+
+## Building
+
+```bash
+./gradlew build
+```
+
+## Testing
+
+Start a Neptulon server at local address: `127.0.0.1:3000` and then:
+
+```bash
+./gradlew check
+```
