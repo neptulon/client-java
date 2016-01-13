@@ -39,6 +39,7 @@ public class NeptulonTest {
         assertThat("Connection was not established in time.", conn.isConnected());
 
         // todo: add middleware to log the incoming message here and replace logger inside response handler with verifier
+        // and release v0.1 corresponding to Neptulon v0.1
 
         conn.sendRequest("test", new Test("wow"), new ResHandler<String>() {
             @Override
