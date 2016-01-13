@@ -33,6 +33,7 @@ public class ConnImpl implements Conn, WebSocketListener {
     private final List<Middleware> middleware;
     private final Map<String, ResHandler> resHandlers;
     private WebSocket ws;
+    private boolean connected;
 
     /**
      * Initializes a new connection with given server URL.
@@ -99,6 +100,11 @@ public class ConnImpl implements Conn, WebSocketListener {
     }
 
     @Override
+    public boolean isConnected() {
+        return ws != null && connected;
+    }
+
+    @Override
     public void remoteAddr() {
 
     }
@@ -118,6 +124,7 @@ public class ConnImpl implements Conn, WebSocketListener {
 
     @Override
     public void close() {
+        connected = false;
         try {
             ws.close(0, "");
         } catch (IOException e) {
@@ -132,11 +139,13 @@ public class ConnImpl implements Conn, WebSocketListener {
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
         ws = webSocket;
+        connected = true;
         logger.info("WebSocket connected.");
     }
 
     @Override
     public void onFailure(IOException e, Response response) {
+        connected = false;
         logger.warning("WebSocket connection closed with error: " + e.getMessage());
     }
 
@@ -161,6 +170,7 @@ public class ConnImpl implements Conn, WebSocketListener {
 
     @Override
     public void onClose(int code, String reason) {
+        connected = false;
         logger.info("WebSocket closed.");
     }
 }
