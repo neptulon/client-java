@@ -6,7 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public class NeptulonTest {
-    private final String url = "ws://127.0.0.1:3000";
+    public static final String URL = "ws://127.0.0.1:3000";
 
     @Test
     public void emailValidator_CorrectEmailSimple_ReturnsTrue() {
@@ -27,7 +27,7 @@ public class NeptulonTest {
             }
         }
 
-        Conn conn = new ConnImpl(url);
+        Conn conn = new ConnImpl(URL);
         conn.connect();
 
         try {
