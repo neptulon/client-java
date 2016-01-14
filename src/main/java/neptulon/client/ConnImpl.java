@@ -93,10 +93,19 @@ public class ConnImpl implements Conn, WebSocketListener {
         middleware.add(mw);
     }
 
-    // todo: handleRequest(method, .....) { if isClientConn... else exception } // same goes for go-client
+    // todo: add default router
+    // handleRequest(method, .....) { if isClientConn... else exception } // same goes for go-client
 
     @Override
     public void connect() {
+        // add sender middleware as the last middleware in stack
+        middleware.add(new Middleware() {
+            @Override
+            public void handler(ReqCtx req) {
+                send(req);
+            }
+        });
+
         // enqueue this listener implementation to initiate the WebSocket connection
         wsCall.enqueue(this);
     }
@@ -163,7 +172,7 @@ public class ConnImpl implements Conn, WebSocketListener {
         }
 
         // handle request message
-        // todo: add response middleware and fire up ReqCtx.next()
+        new ReqCtx(msg.id, msg.method, msg.params, middleware, gson).next();
     }
 
     @Override

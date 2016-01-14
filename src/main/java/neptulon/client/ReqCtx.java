@@ -8,17 +8,17 @@ import java.util.List;
 /**
  * Request context.
  */
-public abstract class ReqCtx {
-    final String id;
-    final String method;
-    final JsonElement params;
+public class ReqCtx {
+    private final String id;
+    private final String method;
+    private final JsonElement params;
     private final List<Middleware> middleware;
     private int mwIndex;
     private final Gson gson;
 
-    protected Response response;
+    public Response response;
 
-    protected ReqCtx(String id, String method, JsonElement params, List<Middleware> middleware, Gson gson) {
+    public ReqCtx(String id, String method, JsonElement params, List<Middleware> middleware, Gson gson) {
         this.id = id;
         this.method = method;
         this.params = params;
@@ -26,11 +26,11 @@ public abstract class ReqCtx {
         this.gson = gson;
     }
 
-    protected <T> T getParams(Class<T> classOfT) {
+    public <T> T getParams(Class<T> classOfT) {
         return gson.fromJson(params, classOfT);
     }
 
-    protected void next() {
+    public void next() {
         mwIndex++;
 
         if (mwIndex <= middleware.size()) {
