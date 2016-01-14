@@ -163,6 +163,7 @@ public class ConnImpl implements Conn, WebSocketListener {
         }
 
         // handle request message
+        // todo: add response middleware and fire up ReqCtx.next()
     }
 
     @Override

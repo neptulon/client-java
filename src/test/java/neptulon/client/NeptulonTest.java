@@ -43,7 +43,7 @@ public class NeptulonTest {
 
         conn.middleware(new Middleware() {
             @Override
-            public void handler(ReqHandler req) {
+            public void handler(ReqCtx req) {
 
             }
         });
