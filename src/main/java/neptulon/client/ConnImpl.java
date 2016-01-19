@@ -72,9 +72,9 @@ public class ConnImpl implements Conn, WebSocketListener {
         }
     }
 
-    /*
-     * ######## Conn Implementation ########
-     */
+    /***********************
+     * Conn Implementation *
+     ***********************/
 
     @Override
     public void useTLS(byte[] ca, byte[] clientCert, byte[] clientCertKey) {
@@ -143,9 +143,9 @@ public class ConnImpl implements Conn, WebSocketListener {
         }
     }
 
-    /*
-     * ######## WebSocketListener Implementation ########
-     */
+    /************************************
+     * WebSocketListener Implementation *
+     ************************************/
 
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
