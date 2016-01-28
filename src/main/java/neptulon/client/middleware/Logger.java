@@ -12,5 +12,6 @@ public class Logger implements Middleware {
     @Override
     public void handler(ReqCtx ctx) {
         logger.info(ctx.getParams(String.class));
+        ctx.next();
     }
 }

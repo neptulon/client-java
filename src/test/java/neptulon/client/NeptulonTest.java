@@ -1,5 +1,6 @@
 package neptulon.client;
 
+import neptulon.client.middleware.Logger;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -9,18 +10,14 @@ public class NeptulonTest {
     public static final String URL = "ws://127.0.0.1:3000";
 
     @Test
-    public void emailValidator_CorrectEmailSimple_ReturnsTrue() {
-        assertThat("hazelnuts", 3, equalTo(3));
-    }
-
-    @Test
-    public void connect() {
+    public void connect() throws InterruptedException {
         if (isTravis()) {
             return;
         }
 
         class Test {
             final String message;
+
             Test(String message) {
                 this.message = message;
             }
@@ -29,25 +26,12 @@ public class NeptulonTest {
         Conn conn = new ConnImpl(URL);
         conn.connect();
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        Thread.sleep(100);
         assertThat("Connection was not established in time.", conn.isConnected());
 
-        // todo: add middleware to log the incoming message here and replace logger inside response handler with verifier
-        // and release v0.1 corresponding to Neptulon v0.1
+        conn.middleware(new Logger());
 
-        conn.middleware(new Middleware() {
-            @Override
-            public void handler(ReqCtx ctx) {
-
-            }
-        });
-
-        conn.sendRequest("test", new Test("wow"), new ResHandler<String>() {
+        conn.sendRequest("echo", new Test("Hello from Java client!"), new ResHandler<String>() {
             @Override
             public Class<String> getType() {
                 return String.class;

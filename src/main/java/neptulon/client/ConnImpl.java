@@ -30,8 +30,8 @@ public class ConnImpl implements Conn, WebSocketListener {
     private final OkHttpClient client;
     private final Request request;
     private final WebSocketCall wsCall;
-    private final List<Middleware> middleware;
-    private final Map<String, ResHandler> resHandlers;
+    private final List<Middleware> middleware = new ArrayList<>();
+    private final Map<String, ResHandler> resHandlers = new HashMap<>();
     private WebSocket ws;
     private boolean connected;
 
@@ -39,9 +39,6 @@ public class ConnImpl implements Conn, WebSocketListener {
      * Initializes a new connection with given server URL.
      */
     public ConnImpl(String url) {
-        middleware = new ArrayList<>();
-        resHandlers = new HashMap<>();
-
         client = new OkHttpClient.Builder()
                 .connectTimeout(45, TimeUnit.SECONDS)
                 .writeTimeout(300, TimeUnit.SECONDS)
