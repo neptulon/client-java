@@ -29,7 +29,7 @@ public class NeptulonTest {
         router.request("echo", new Echo());
         conn.middleware(router);
 
-        CountDownLatch counter = new CountDownLatch(2); // todo: add one more for ws.onClose
+        final CountDownLatch counter = new CountDownLatch(2); // todo: add one more for ws.onClose
 
         conn.sendRequest("echo", new EchoMessage("Hello from Java client!"), new ResHandler<Object>() {
             @Override
