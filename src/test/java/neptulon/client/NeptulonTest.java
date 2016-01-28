@@ -20,14 +20,14 @@ public class NeptulonTest {
         }
 
         Conn conn = new ConnImpl(URL);
-        conn.connect();
-        Thread.sleep(100);
-        assertThat("Connection was not established in time.", conn.isConnected());
-
         conn.middleware(new Logger());
         Router router = new Router();
         router.request("echo", new Echo());
         conn.middleware(router);
+
+        conn.connect();
+        Thread.sleep(100);
+        assertThat("Connection was not established in time.", conn.isConnected());
 
         final CountDownLatch counter = new CountDownLatch(2); // todo: add one more for ws.onClose
 

@@ -12,6 +12,25 @@ Depends on following libraries:
 * OkHttp for WebSockets
 * GSON for JSON serialization.
 
+## Example
+
+```java
+Conn conn = new ConnImpl("ws://127.0.0.1:3001");
+conn.middleware(new Logger());
+conn.connect();
+conn.sendRequest("hello", new EchoMessage("Hello from Java client!"), new ResHandler<Object>() {
+  @Override
+  public Class<Object> getType() {
+    return Object.class;
+  }
+
+  @Override
+  public void handler(Response<Object> res) {
+    System.out.println("Received hello message response: " + res.result);
+  }
+});
+```
+
 ## Building
 
 ```bash
@@ -25,3 +44,7 @@ Start a Neptulon server at local address: `127.0.0.1:3000` and then:
 ```bash
 ./gradlew check
 ```
+
+## License
+
+[MIT](LICENSE)
