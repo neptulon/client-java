@@ -7,7 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public class NeptulonTest {
-    public static final String URL = "ws://127.0.0.1:3000";
+    private static final String URL = "ws://127.0.0.1:3000";
 
     @Test
     public void connect() throws InterruptedException {
@@ -15,23 +15,14 @@ public class NeptulonTest {
             return;
         }
 
-        class Test {
-            final String message;
-
-            Test(String message) {
-                this.message = message;
-            }
-        }
-
         Conn conn = new ConnImpl(URL);
         conn.connect();
-
         Thread.sleep(100);
         assertThat("Connection was not established in time.", conn.isConnected());
 
         conn.middleware(new Logger());
 
-        conn.sendRequest("echo", new Test("Hello from Java client!"), new ResHandler<String>() {
+        conn.sendRequest("echo", new EchoMessage("Hello from Java client!"), new ResHandler<String>() {
             @Override
             public Class<String> getType() {
                 return String.class;
@@ -46,5 +37,13 @@ public class NeptulonTest {
 
     private boolean isTravis() {
         return System.getenv().containsKey("TRAVIS");
+    }
+
+    private class EchoMessage {
+        final String message;
+
+        EchoMessage(String message) {
+            this.message = message;
+        }
     }
 }
