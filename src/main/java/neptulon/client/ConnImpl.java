@@ -61,8 +61,10 @@ public class ConnImpl implements Conn, WebSocketListener {
     }
 
     private void send(Object src) {
+        String m =  gson.toJson(src);
+        logger.info("Outgoing message: " + m);
         try {
-            ws.sendMessage(RequestBody.create(WebSocket.TEXT, gson.toJson(src)));
+            ws.sendMessage(RequestBody.create(WebSocket.TEXT, m));
         } catch (IOException e) {
             e.printStackTrace();
             close();
@@ -99,7 +101,12 @@ public class ConnImpl implements Conn, WebSocketListener {
         middleware.add(new Middleware() {
             @Override
             public void handler(ReqCtx ctx) {
-                send(ctx);
+                if (ctx.response != null) {
+                    send(ctx.response);
+                    return;
+                }
+
+                logger.warning("No response provided for for request: " + ctx.getID() + ": " + ctx.getMethod());
             }
         });
 

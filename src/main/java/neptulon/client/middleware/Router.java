@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Neptulon router middleware.
+ * Request router middleware.
  */
 public class Router implements Middleware {
     private final Map<String, Middleware> routes = new HashMap<>();

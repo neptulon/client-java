@@ -38,10 +38,6 @@ public class ReqCtx {
         return method;
     }
 
-    public void setResponse(Response response) {
-        this.response = response;
-    }
-
     public void next() {
         mwIndex++;
 
