@@ -30,8 +30,8 @@ public class ReqCtx {
         this.gson = gson;
     }
 
-    public <T> T getParams(Class<T> classOfT) {
-        return gson.fromJson(params, classOfT);
+    public Conn getConn() {
+        return conn;
     }
 
     public String getID() {
@@ -42,11 +42,15 @@ public class ReqCtx {
         return method;
     }
 
+    public <T> T getParams(Class<T> classOfT) {
+        return gson.fromJson(params, classOfT);
+    }
+
     public void next() {
         mwIndex++;
 
         if (mwIndex <= middleware.size()) {
-            middleware.get(mwIndex-1).handler(this);
+            middleware.get(mwIndex - 1).handler(this);
             return;
         }
 
