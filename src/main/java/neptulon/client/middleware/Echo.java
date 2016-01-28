@@ -12,6 +12,5 @@ public class Echo implements Middleware {
     @Override
     public void handler(ReqCtx ctx) {
         ctx.response = new Response<>(ctx.getID(), ctx.getParams(Object.class), null);
-        throw new RuntimeException("wow");
     }
 }

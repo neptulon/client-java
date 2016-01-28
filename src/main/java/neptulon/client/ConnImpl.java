@@ -60,7 +60,7 @@ public class ConnImpl implements Conn, WebSocketListener {
         this("ws://10.0.2.2:3000");
     }
 
-    private void send(Object src) {
+    void send(Object src) {
         String m =  gson.toJson(src);
         logger.info("Outgoing message: " + m);
         try {
@@ -97,19 +97,6 @@ public class ConnImpl implements Conn, WebSocketListener {
 
     @Override
     public void connect() {
-        // add sender middleware as the last middleware in stack
-        middleware.add(new Middleware() {
-            @Override
-            public void handler(ReqCtx ctx) {
-                if (ctx.response != null) {
-                    send(ctx.response);
-                    return;
-                }
-
-                logger.warning("No response provided for for request: " + ctx.getID() + ": " + ctx.getMethod());
-            }
-        });
-
         // enqueue this listener implementation to initiate the WebSocket connection
         wsCall.enqueue(this);
     }
@@ -176,7 +163,7 @@ public class ConnImpl implements Conn, WebSocketListener {
         }
 
         // handle request message
-        new ReqCtx(msg.id, msg.method, msg.params, middleware, gson).next();
+        new ReqCtx(this, msg.id, msg.method, msg.params, middleware, gson).next();
     }
 
     @Override
