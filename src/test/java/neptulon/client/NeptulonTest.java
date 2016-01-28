@@ -21,7 +21,6 @@ public class NeptulonTest {
 
         class Test {
             final String message;
-
             Test(String message) {
                 this.message = message;
             }
@@ -43,7 +42,7 @@ public class NeptulonTest {
 
         conn.middleware(new Middleware() {
             @Override
-            public void handler(ReqCtx req) {
+            public void handler(ReqCtx ctx) {
 
             }
         });

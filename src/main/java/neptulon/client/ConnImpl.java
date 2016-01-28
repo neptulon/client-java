@@ -101,8 +101,8 @@ public class ConnImpl implements Conn, WebSocketListener {
         // add sender middleware as the last middleware in stack
         middleware.add(new Middleware() {
             @Override
-            public void handler(ReqCtx req) {
-                send(req);
+            public void handler(ReqCtx ctx) {
+                send(ctx);
             }
         });
 
