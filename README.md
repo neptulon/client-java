@@ -1,7 +1,6 @@
 # Neptulon Java Client
 
 [![Build Status](https://travis-ci.org/neptulon/client-java.svg?branch=master)](https://travis-ci.org/neptulon/client-java)
-[![Documentation Status](https://readthedocs.org/projects/neptulon-java-client/badge/?version=latest)](http://neptulon-java-client.readthedocs.org/en/latest/?badge=latest)
 
 Neptulon client implementation for Java. Also works on Android. Following are required:
 
