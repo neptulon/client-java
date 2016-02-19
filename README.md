@@ -39,7 +39,7 @@ conn.sendRequest("hello", new EchoMessage("Hello from Java client!"), new ResHan
 
 ## Testing
 
-Start a Neptulon server at local address: `127.0.0.1:3000` and then:
+Start a Neptulon server at local address: `127.0.0.1:3001` and then:
 
 ```bash
 ./gradlew check
