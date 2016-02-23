@@ -1,6 +1,7 @@
 package neptulon.client;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import neptulon.client.callbacks.ConnCallback;
+import neptulon.client.callbacks.ResCallback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -26,14 +29,15 @@ import okio.Buffer;
  */
 public class ConnImpl implements Conn, WebSocketListener {
     private static final Logger logger = Logger.getLogger(ConnImpl.class.getSimpleName());
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").create();
     private final OkHttpClient client;
     private final Request request;
     private final WebSocketCall wsCall;
     private final List<Middleware> middleware = new ArrayList<>();
-    private final Map<String, ResHandler> resHandlers = new HashMap<>();
+    private final Map<String, ResCallback> resCallbacks = new HashMap<>();
     private WebSocket ws;
     private boolean connected;
+    private ConnCallback connCallback;
 
     /**
      * Initializes a new connection with given server URL.
@@ -96,14 +100,10 @@ public class ConnImpl implements Conn, WebSocketListener {
     // handleRequest(method, .....) { if isClientConn... else exception } // same goes for go-client
 
     @Override
-    public void connect() {
+    public void connect(ConnCallback handler) {
         // enqueue this listener implementation to initiate the WebSocket connection
+        connCallback = handler;
         wsCall.enqueue(this);
-    }
-
-    @Override
-    public boolean isConnected() {
-        return ws != null && connected;
     }
 
     @Override
@@ -112,15 +112,15 @@ public class ConnImpl implements Conn, WebSocketListener {
     }
 
     @Override
-    public <T> void sendRequest(String method, T params, ResHandler handler) {
+    public <T> void sendRequest(String method, T params, ResCallback cb) {
         String id = UUID.randomUUID().toString();
         neptulon.client.Request r = new neptulon.client.Request<>(id, method, params);
         send(r);
-        resHandlers.put(id, handler);
+        resCallbacks.put(id, cb);
     }
 
     @Override
-    public void sendRequestArr(String method, ResHandler handler, Object... params) {
+    public void sendRequestArr(String method, ResCallback cb, Object... params) {
 
     }
 
@@ -143,12 +143,15 @@ public class ConnImpl implements Conn, WebSocketListener {
         ws = webSocket;
         connected = true;
         logger.info("WebSocket connected.");
+        connCallback.connected();
     }
 
     @Override
     public void onFailure(IOException e, Response response) {
         connected = false;
-        logger.warning("WebSocket connection closed with error: " + e.getMessage());
+        String reason = e.getMessage();
+        logger.warning("WebSocket connection closed with error: " + reason);
+        connCallback.disconnected(reason);
     }
 
     @Override
@@ -158,7 +161,7 @@ public class ConnImpl implements Conn, WebSocketListener {
         Message msg = gson.fromJson(msgStr, Message.class);
         if (msg.method == null || msg.method.isEmpty()) {
             // handle response message
-            resHandlers.get(msg.id).execute(gson, msg);
+            resCallbacks.get(msg.id).handleResponse(new ResCtx(msg.id, msg.result, msg.error, gson));
             return;
         }
 
