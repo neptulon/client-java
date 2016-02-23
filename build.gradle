@@ -1,5 +1,4 @@
 group 'neptulon.client'
-version '0.1'
 
 apply plugin: 'java'
 
