@@ -15,19 +15,16 @@ Depends on following libraries:
 ## Example
 
 ```java
-Conn conn = new ConnImpl("ws://127.0.0.1:3001");
+Conn conn = new ConnImpl("ws://127.0.0.1:3000");
 conn.middleware(new Logger());
-conn.connect();
-conn.sendRequest("hello", new EchoMessage("Hello from Java client!"), new ResHandler<Object>() {
-  @Override
-  public Class<Object> getType() {
-    return Object.class;
-  }
-
-  @Override
-  public void handler(Response<Object> res) {
-    System.out.println("Received hello message response: " + res.result);
-  }
+conn.connect(new ConnCallback() { ... });
+conn.sendRequest("hello", new EchoMessage("Hello from Java client!"), new ResCallback() {
+    @Override
+    public void handleResponse(ResCtx ctx) {
+        Object res = ctx.getResult(Object.class);
+        System.out.println("Received 'echo' response: " + res);
+        msgCounter.countDown();
+    }
 });
 ```
 
