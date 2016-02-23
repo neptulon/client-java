@@ -18,7 +18,7 @@ Depends on following libraries:
 Conn conn = new ConnImpl("ws://127.0.0.1:3000");
 conn.middleware(new Logger());
 conn.connect(new ConnCallback() { ... });
-conn.sendRequest("hello", new EchoMessage("Hello from Java client!"), new ResCallback() {
+conn.sendRequest("hello", new HelloMessage("Hello from Java client!"), new ResCallback() {
     @Override
     public void handleResponse(ResCtx ctx) {
         System.out.println("Received 'hello' response: " + ctx.getResult(Object.class));
