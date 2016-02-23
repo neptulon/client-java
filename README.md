@@ -21,9 +21,7 @@ conn.connect(new ConnCallback() { ... });
 conn.sendRequest("hello", new EchoMessage("Hello from Java client!"), new ResCallback() {
     @Override
     public void handleResponse(ResCtx ctx) {
-        Object res = ctx.getResult(Object.class);
-        System.out.println("Received 'echo' response: " + res);
-        msgCounter.countDown();
+        System.out.println("Received 'echo' response: " + ctx.getResult(Object.class));
     }
 });
 ```
